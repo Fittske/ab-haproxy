@@ -1,0 +1,15 @@
+- name: Initial config
+  hosts: all
+  become: yes
+  roles:
+    - apt
+    - ntp
+    - monit
+    - haproxy
+#  tasks:
+#    - name: Write variable content into file
+#      become: yes
+#      copy:
+#        dest: ansible_result_haproxy.ini
+#        content: "vagrant global-status | grep `pwd` | awk '{print $1}'"
+#      delegate_to: localhost

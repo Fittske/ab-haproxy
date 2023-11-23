@@ -1,0 +1,9 @@
+---
+# defaults file for haproxy
+haproxy_allow_bind_non_local_ip: true
+
+haproxy_connect_timeout: 5000
+
+haproxy_client_timeout: 50000
+
+haproxy_server_timeout: 50000

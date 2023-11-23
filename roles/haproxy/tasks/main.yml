@@ -1,0 +1,40 @@
+---
+# tasks file for haproxy
+- name: Ensure HAProxy is installed.
+  package:
+    name:
+      - haproxy
+
+- name: Ensure configuration directories exists
+  file:
+    state: directory
+    path: "/etc/haproxy/{{ item }}"
+    mode: 0755
+  loop:
+    - conf.d
+    - errorfiles
+
+- name: Set haproxy base configuration
+  template:
+    src: haproxy.cfg
+    dest: /etc/haproxy/conf.d/00-base.cfg
+    mode: 0644
+
+- name: Assemble configuration file
+  ansible.builtin.assemble:
+    src: /etc/haproxy/conf.d/
+    dest: /etc/haproxy/haproxy.cfg
+    validate: /usr/sbin/haproxy -c -f %s
+  notify: Reload haproxy
+
+- name: Configure system to allow bind of non local IPs
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_nonlocal_bind
+    value: "1"
+  when: haproxy_allow_bind_non_local_ip
+
+- name: Ensure the service is enabled and started
+  systemd:
+    name: "haproxy"
+    enabled: true
+    state: started

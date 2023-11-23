@@ -1,0 +1,6 @@
+---
+# handlers file for haproxy
+- name: Reload haproxy
+  systemd:
+    name: "haproxy"
+    state: reloaded
